@@ -11,40 +11,6 @@ import RiskProbabilitiesLib as rpl
 
 # future idea: add a variable to simulate other die sizes?
 
-# requires lists to be sorted already
-#def compareDice(attDice,defDice):
-#	attLen = len(attDice)
-#	defLen = len(defDice)
-#	comps = min(attLen,defLen)
-#	attLoss = 0
-#	defLoss = 0
-#	for ii in range(comps):
-#		if attDice[ii] > defDice[ii]:
-#			defLoss += 1
-#		else:
-#			attLoss += 1
-#	return [attLoss,defLoss]
-
-# should only be called from selectDiceIndex(nAtt,nDef)
-#def selectDice(nAtt,nDef):
-#	if nAtt > 3:
-#		attDice = 3
-#	else:
-#		attDice = nAtt
-#	if nDef > 2:
-#		defDice = 2
-#	else:
-#		defDice = nDef
-#	return [attDice,defDice]
-
-#def selectDiceIndex(nAtt,nDef):
-#	[attDice,defDice] = selectDice(nAtt,nDef)
-#	return [attDice-1,defDice-1]
-
-#def getProbs(nAtt,nDef):
-#	[a,d] = selectDiceIndex(nAtt,nDef)
-#	return probs[a,d]
-
 # building pre-sorted dictionaries for one, two, and three dice
 for p in range(6):
 	if p == 0:
@@ -107,12 +73,15 @@ for m in range(2,chartSize):
 		[p0,p1,p2] = rpl.getProbs(ii,m,probs)
 		chart[ii][m] = (p0*chart[ii][m-2]) + (p1*chart[ii-1][m-1]) + (p2*chart[ii-2][m])
 		[p0,p1,p2] = rpl.getProbs(m,ii,probs)
-		chart[m][ii] = p0*chart[m][ii-2] + p1*chart[m-1][ii-1] + p2*chart[m-2][ii-2]
+		chart[m][ii] = p0*chart[m][ii-2] + p1*chart[m-1][ii-1] + p2*chart[m-2][ii]
 
 ch = plt.imshow(chart[1:chartSize,1:chartSize],cmap = 'Reds',origin='lower',extent=(0.5,chartSize-0.5,0.5,chartSize-0.5))
 ticks = [i for i in range(1,chartSize)]
 plt.xticks(ticks)
 plt.yticks(ticks)
+plt.xlabel("Defending Army Size")
+plt.ylabel("Attacking Army Size")
+plt.title("Probability of winning an attack in the board game Risk")
 
 for ii in range(1,chartSize):
 	for jj in range(1,chartSize):
