@@ -1,35 +1,35 @@
 ## Library of helper functions for RiskProbabilities.py
 
 # requires lists to be sorted already
-def compareDice(attDice,defDice):
-	attLen = len(attDice)
-	defLen = len(defDice)
-	comps = min(attLen,defLen)
-	attLoss = 0
-	defLoss = 0
+def compare_dice(att_dice,def_dice):
+	att_len = len(att_dice)
+	def_len = len(def_dice)
+	comps = min(att_len,def_len)
+	att_loss = 0
+	def_loss = 0
 	for ii in range(comps):
-		if attDice[ii] > defDice[ii]:
-			defLoss += 1
+		if att_dice[ii] > def_dice[ii]:
+			def_loss += 1
 		else:
-			attLoss += 1
-	return [attLoss,defLoss]
+			att_loss += 1
+	return [att_loss,def_loss]
 
-# should only be called from selectDiceIndex(nAtt,nDef)
-def selectDice(nAtt,nDef):
-	if nAtt > 3:
-		attDice = 3
+# should only be called from select_dice_index(n_att,n_def)
+def select_dice(n_att,n_def):
+	if n_att > 3:
+		att_dice = 3
 	else:
-		attDice = nAtt
-	if nDef > 2:
-		defDice = 2
+		att_dice = n_att
+	if n_def > 2:
+		def_dice = 2
 	else:
-		defDice = nDef
-	return [attDice,defDice]
+		def_dice = n_def
+	return [att_dice,def_dice]
 
-def selectDiceIndex(nAtt,nDef):
-	[attDice,defDice] = selectDice(nAtt,nDef)
-	return [attDice-1,defDice-1]
+def select_dice_index(n_att,n_def):
+	[att_dice,def_dice] = select_dice(n_att,n_def)
+	return [att_dice-1,def_dice-1]
 
-def getProbs(nAtt,nDef,probs):
-	[a,d] = selectDiceIndex(nAtt,nDef)
+def get_probs(n_att,n_def,probs):
+	[a,d] = select_dice_index(n_att,n_def)
 	return probs[a,d]

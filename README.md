@@ -8,3 +8,5 @@ The script which generates the visualization is found in RiskProbabilities.py. A
 
 # Color scheme
 The color scheme of the visualizations was chosen to represent the dice used in the game. The attacker's dice are red with white pips, and the defender's dice are white with black pips. To represent this, the background of each cell in the visualization is colored on a white-red spectrum. The text is white when the attacker is more likely to win, and the text is black when the defender is more likely to win.
+
+When the size of the chart is sufficiently large, the text with probabilities is removed.
