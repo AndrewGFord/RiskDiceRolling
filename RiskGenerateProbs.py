@@ -3,7 +3,7 @@
 import numpy as np
 import RiskProbabilitiesLib as rpl
 
-def generate_probabilities(die, filename):
+def generate_probabilities(die, filename, save_file):
 	# generate probabilities
 	# build pre-sorted dictionaries for one, two, and three dice
 	for p in range(die):
@@ -46,5 +46,6 @@ def generate_probabilities(die, filename):
 			probs[ai][di] = results[ai][di]/(a_combs*d_combs)
 	
 	# save probabilities to numpy file
-	np.save(filename, probs)
+	if save_file:
+		np.save(filename, probs)
 	return probs

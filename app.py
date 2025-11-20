@@ -36,27 +36,27 @@ def server(input: Inputs, output: Outputs, session: Session):
         #chart_size = input.chart_size()
         # loads a larger chart in the background, not necessarily all displayed
         chart_size = 30
-        chart = np.zeros([chart_size, chart_size])
+        chart = np.zeros([chart_size+1, chart_size+1])
 
         # initialize a 100% chance of the attackers winning with 0 defenders
-        for i in range(chart_size):
+        for i in range(chart_size+1):
             chart[i,0] = 1
 
         # fill in the case where there is 1 attacker and 1 defender
         chart[1,1] = probs[0,0,0]
 
         # fill in the cases with 2 attackers OR 2 defenders
-        for i in range(2,chart_size):
+        for i in range(2,chart_size+1):
             [p0,p1,p2] = rpl.get_probs(i,1,probs)
             chart[i,1] = p0*chart[i,0] + p1*chart[i-1,1] # first term should be p0
             [p0,p1,p2] = rpl.get_probs(1,i,probs)
             chart[1,i] = p0*chart[1,i-1] + p1*chart[0,i] # second term should be 0
         
         # fill in the rest of the chart
-        for m in range(2,chart_size):
+        for m in range(2,chart_size+1):
             [p0,p1,p2] = rpl.get_probs(m,m,probs)
             chart[m,m] = p0*chart[m,m-2] + p1*chart[m-1,m-1] + p2*chart[m-2,m]
-            for i in range(m+1,chart_size):
+            for i in range(m+1,chart_size+1):
                 [p0,p1,p2] = rpl.get_probs(i,m,probs)
                 chart[i,m] = p0*chart[i,m-2] + p1*chart[i-1,m-1] + p2*chart[i-2,m]
                 [p0,p1,p2] = rpl.get_probs(m,i,probs)
@@ -69,9 +69,9 @@ def server(input: Inputs, output: Outputs, session: Session):
         # logic that was here is now in update_chart_data
         chart_size = input.chart_size()
         chart = prob_chart()
-        
-        ch = plt.imshow(chart[1:chart_size,1:chart_size], cmap='Reds',origin='lower',extent=(0.5,chart_size-0.5,0.5,chart_size-0.5))
-        ticks = [i for i in range(1,chart_size)]
+
+        ch = plt.imshow(chart[1:chart_size+1,1:chart_size+1], cmap='Reds',origin='lower',extent=(0.5,chart_size+0.5,0.5,chart_size+0.5))
+        ticks = [i for i in range(1,chart_size+1)]
         plt.xticks(ticks)
         plt.yticks(ticks)
         plt.xlabel('Defending Army Size')
@@ -89,8 +89,8 @@ def server(input: Inputs, output: Outputs, session: Session):
             annotate_plot = False
         
         if annotate_plot:
-            for i in range(1,chart_size):
-                for j in range(1,chart_size):
+            for i in range(1,chart_size+1):
+                for j in range(1,chart_size+1):
                     p = chart[i,j]
                     if p >= 0.995:
                         p_str = '>.99'
