@@ -115,6 +115,13 @@ def server(input: Inputs, output: Outputs, session: Session):
             defender_str = 'defender'
         else:
             defender_str = 'defenders'
-        return f'Probability of {input.num_att()} {attacker_str} defeating {input.num_def()} {defender_str}: {chart[input.num_att(),input.num_def()]}'
+        p = chart[input.num_att(),input.num_def()]
+        if p>0.99995:
+            p_str = '>99.99%'
+        elif p<0.00005:
+            p_str = '<0.01%'
+        else:
+            p_str = f'{p:.2%}'
+        return f'Chance of {input.num_att()} {attacker_str} defeating {input.num_def()} {defender_str}: {p_str}'
 
 app = App(app_ui, server)
