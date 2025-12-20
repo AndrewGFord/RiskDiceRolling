@@ -11,31 +11,47 @@ probs = rgp.generate_probabilities(die=die_size, filename='', save_file=False)
 # Move these to server logic later to allow users to change die size
 
 app_ui = ui.page_fluid(
-    ui.layout_columns(
-        ui.card(
-            ui.h3('Probability Grid'),
-            # TODO: Adjust relative sizes using CSS
-            ui.layout_columns(
-                ui.input_slider('chart_size_slider', 'Chart Size', min=1, max=30, value=10),
-                ui.input_numeric('chart_size_numeric', label = 'Chart Size', value=10, min=1, max=30, step=1),
-            ),
-            ui.input_selectize('die_size', 'Number of Faces on Die', choices=[4, 6, 8, 12, 20], selected=6),
-            ui.output_plot('plot_probs'),
+    ui.navset_pill(
+        ui.nav_panel(
+            'About',
+            ui.h3('Risk Battle Probability Calculator'),
+            ui.p('This webapp calculates and displays the probabilities of attackers winning battles in the board game Risk.'),
+            ui.p('The "Probability Grid" tab shows a heatmap of the chances of attackers winning against defenders for various army sizes. The "Single Battle Probability" tab allows you to select specific numbers of attackers and defenders to see the exact probability of victory.'),
+            ui.p('While this webapp tells you the probability of winning a battle when both the attacker and defender roll the optimal number of dice, it does not tell you whether attacking an opponent is a better idea than simply not fighting a specific battle.'),
+            ui.p('You can adjust the number of faces on the dice used in battles, which affects the probabilities. The default is a standard 6-sided die, but dice in the shape of any other Platonic solid (4, 8, 12, or 20 faces) can be chosen.'),
+            ui.p('This webapp was created using Python and the Shiny framework.'),
         ),
-        ui.card(
-            ui.h3('Single Battle Probability'),
-            # TODO: Adjust relative sizes using CSS
-            ui.layout_columns(
-                ui.input_slider('num_att_slider', 'Number of Attackers', min=1, max=30, value=1),
-                ui.input_numeric('num_att_numeric', label = 'Number of Attackers', value=1, min=1, max=30, step=1),
+        ui.nav_panel(
+            'Probability Grid',
+            ui.card(
+                ui.h3('Probability Grid'),
+                # TODO: Adjust relative sizes using CSS
+                ui.layout_columns(
+                    ui.input_slider('chart_size_slider', 'Chart Size', min=1, max=30, value=10),
+                    ui.input_numeric('chart_size_numeric', label = 'Chart Size', value=10, min=1, max=30, step=1),
+                ),
+                ui.input_selectize('die_size', 'Number of Faces on Die', choices=[4, 6, 8, 12, 20], selected=6),
+                ui.output_plot('plot_probs'),
             ),
-            ui.layout_columns(
-                ui.input_slider('num_def_slider', 'Number of Defenders', min=1, max=30, value=1),
-                ui.input_numeric('num_def_numeric', label = 'Number of Defenders', value=1, min=1, max=30, step=1),
-            ),
-            ui.output_text('selected_probability'),
         ),
-    )
+        ui.nav_panel(
+            'Single Battle Probability',
+            ui.card(
+                ui.h3('Single Battle Probability'),
+                # TODO: Adjust relative sizes using CSS
+                ui.input_selectize('die_size_single_battle', 'Number of Faces on Die', choices=[4, 6, 8, 12, 20], selected=6),
+                ui.layout_columns(
+                    ui.input_slider('num_att_slider', 'Number of Attackers', min=1, max=30, value=1),
+                    ui.input_numeric('num_att_numeric', label = 'Number of Attackers', value=1, min=1, max=30, step=1),
+                ),
+                ui.layout_columns(
+                    ui.input_slider('num_def_slider', 'Number of Defenders', min=1, max=30, value=1),
+                    ui.input_numeric('num_def_numeric', label = 'Number of Defenders', value=1, min=1, max=30, step=1),
+                ),
+                ui.output_text('selected_probability'),
+            ),
+        ),
+    ),
 )
 
 def server(input: Inputs, output: Outputs, session: Session):
@@ -93,6 +109,24 @@ def server(input: Inputs, output: Outputs, session: Session):
         try:
             if input.num_def_slider() != input.num_def_numeric():
                 ui.update_slider(session=session, id='num_def_slider', value=input.num_def_numeric())
+        except:
+            pass
+    
+    @reactive.effect
+    @reactive.event(input.die_size)
+    def update_die_size_single_battle():
+        try:
+            if input.die_size_single_battle() != input.die_size():
+                ui.update_selectize(session=session, id='die_size_single_battle', selected=input.die_size())
+        except:
+            pass
+    
+    @reactive.effect
+    @reactive.event(input.die_size_single_battle)
+    def update_die_size_from_single_battle():
+        try:
+            if input.die_size() != input.die_size_single_battle():
+                ui.update_selectize(session=session, id='die_size', selected=input.die_size_single_battle())
         except:
             pass
 
