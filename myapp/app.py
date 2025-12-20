@@ -13,13 +13,24 @@ probs = rgp.generate_probabilities(die=die_size, filename='', save_file=False)
 app_ui = ui.page_fluid(
     ui.layout_columns(
         ui.card(
-            ui.input_slider('chart_size', 'Chart Size', min=1, max=30, value=10),
+            # TODO: Adjust relative sizes using CSS
+            ui.layout_columns(
+                ui.input_slider('chart_size_slider', 'Chart Size', min=1, max=30, value=10),
+                ui.input_numeric('chart_size_numeric', label = 'Chart Size', value=10, min=1, max=30, step=1),
+            ),
             ui.input_selectize('die_size', 'Number of Faces on Die', choices=[4, 6, 8, 12, 20], selected=6),
             ui.output_plot('plot_probs'),
         ),
         ui.card(
-            ui.input_slider('num_att', 'Number of Attackers', min=1, max=30, value=1),
-            ui.input_slider('num_def', 'Number of Defenders', min=1, max=30, value=1),
+            # TODO: Adjust relative sizes using CSS
+            ui.layout_columns(
+                ui.input_slider('num_att_slider', 'Number of Attackers', min=1, max=30, value=1),
+                ui.input_numeric('num_att_numeric', label = 'Number of Attackers', value=1, min=1, max=30, step=1),
+            ),
+            ui.layout_columns(
+                ui.input_slider('num_def_slider', 'Number of Defenders', min=1, max=30, value=1),
+                ui.input_numeric('num_def_numeric', label = 'Number of Defenders', value=1, min=1, max=30, step=1),
+            ),
             ui.output_text('selected_probability'),
         ),
     )
@@ -28,6 +39,61 @@ app_ui = ui.page_fluid(
 def server(input: Inputs, output: Outputs, session: Session):
     # builds the probability chart for the chosen slider value and die size
     # called both to display chart and for the single battle probability
+    @reactive.effect
+    @reactive.event(input.chart_size_slider)
+    def update_chart_size_numeric_from_slider():
+        try:
+            if input.chart_size_numeric() != input.chart_size_slider():
+                ui.update_numeric(session=session, id='chart_size_numeric', value=input.chart_size_slider())
+                #input.chart_size_numeric.set_value(input.chart_size_slider())
+        except:
+            pass
+    
+    @reactive.effect
+    @reactive.event(input.chart_size_numeric)
+    def update_chart_size_slider_from_numeric():
+        try:
+            if input.chart_size_slider() != input.chart_size_numeric():
+                ui.update_slider(session=session, id='chart_size_slider', value=input.chart_size_numeric())
+        except:
+            pass
+    
+    @reactive.effect
+    @reactive.event(input.num_att_slider)
+    def update_num_att_numeric_from_slider():
+        try:
+            if input.num_att_numeric() != input.num_att_slider():
+                ui.update_numeric(session=session, id='num_att_numeric', value=input.num_att_slider())
+        except:
+            pass
+    
+    @reactive.effect
+    @reactive.event(input.num_att_numeric)
+    def update_num_att_slider_from_numeric():
+        try:
+            if input.num_att_slider() != input.num_att_numeric():
+                ui.update_slider(session=session, id='num_att_slider', value=input.num_att_numeric())
+        except:
+            pass
+    
+    @reactive.effect
+    @reactive.event(input.num_def_slider)
+    def update_num_def_numeric_from_slider():
+        try:
+            if input.num_def_numeric() != input.num_def_slider():
+                ui.update_numeric(session=session, id='num_def_numeric', value=input.num_def_slider())
+        except:
+            pass
+    
+    @reactive.effect
+    @reactive.event(input.num_def_numeric)
+    def update_num_def_slider_from_numeric():
+        try:
+            if input.num_def_slider() != input.num_def_numeric():
+                ui.update_slider(session=session, id='num_def_slider', value=input.num_def_numeric())
+        except:
+            pass
+
     @reactive.calc
     def prob_chart():
         die_size = int(input.die_size()) # Number of sides on the die
@@ -67,7 +133,7 @@ def server(input: Inputs, output: Outputs, session: Session):
     @render.plot
     def plot_probs():
         # logic that was here is now in update_chart_data
-        chart_size = input.chart_size()
+        chart_size = input.chart_size_slider()
         chart = prob_chart()
 
         ch = plt.imshow(chart[1:chart_size+1,1:chart_size+1], cmap='Reds',origin='lower',extent=(0.5,chart_size+0.5,0.5,chart_size+0.5))
@@ -107,21 +173,21 @@ def server(input: Inputs, output: Outputs, session: Session):
     @render.text
     def selected_probability():
         chart = prob_chart()
-        if input.num_att() == 1:
+        if input.num_att_slider() == 1:
             attacker_str = 'attacker'
         else:
             attacker_str = 'attackers'
-        if input.num_def() == 1:
+        if input.num_def_slider() == 1:
             defender_str = 'defender'
         else:
             defender_str = 'defenders'
-        p = chart[input.num_att(),input.num_def()]
+        p = chart[input.num_att_slider(),input.num_def_slider()]
         if p>0.99995:
             p_str = '>99.99%'
         elif p<0.00005:
             p_str = '<0.01%'
         else:
             p_str = f'{p:.2%}'
-        return f'Chance of {input.num_att()} {attacker_str} defeating {input.num_def()} {defender_str}: {p_str}'
+        return f'Chance of {input.num_att_slider()} {attacker_str} defeating {input.num_def_slider()} {defender_str}: {p_str}'
 
 app = App(app_ui, server)
