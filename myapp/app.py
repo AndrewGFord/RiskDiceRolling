@@ -13,6 +13,7 @@ probs = rgp.generate_probabilities(die=die_size, filename='', save_file=False)
 app_ui = ui.page_fluid(
     ui.layout_columns(
         ui.card(
+            ui.h3('Probability Grid'),
             # TODO: Adjust relative sizes using CSS
             ui.layout_columns(
                 ui.input_slider('chart_size_slider', 'Chart Size', min=1, max=30, value=10),
@@ -22,6 +23,7 @@ app_ui = ui.page_fluid(
             ui.output_plot('plot_probs'),
         ),
         ui.card(
+            ui.h3('Single Battle Probability'),
             # TODO: Adjust relative sizes using CSS
             ui.layout_columns(
                 ui.input_slider('num_att_slider', 'Number of Attackers', min=1, max=30, value=1),
