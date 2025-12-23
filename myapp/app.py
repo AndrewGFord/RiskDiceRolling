@@ -23,33 +23,35 @@ app_ui = ui.page_fluid(
         ),
         ui.nav_panel(
             'Probability Grid',
+            ui.h3('Probability Grid'),
+            # TODO: Adjust relative sizes using CSS
             ui.card(
-                ui.h3('Probability Grid'),
-                # TODO: Adjust relative sizes using CSS
                 ui.layout_columns(
                     ui.input_slider('chart_size_slider', 'Chart Size', min=1, max=30, value=10),
-                    ui.input_numeric('chart_size_numeric', label = 'Chart Size', value=10, min=1, max=30, step=1),
+                    ui.input_numeric('chart_size_numeric', label = ' ', value=10, min=1, max=30, step=1),
                 ),
-                ui.input_selectize('die_size', 'Number of Faces on Die', choices=[4, 6, 8, 12, 20], selected=6),
-                ui.output_plot('plot_probs'),
             ),
+            ui.input_selectize('die_size', 'Number of Faces on Die', choices=[4, 6, 8, 12, 20], selected=6),
+            ui.output_plot('plot_probs'),
         ),
         ui.nav_panel(
             'Single Battle Probability',
+            ui.h3('Single Battle Probability'),
+            # TODO: Adjust relative sizes using CSS
+            ui.input_selectize('die_size_single_battle', 'Number of Faces on Die', choices=[4, 6, 8, 12, 20], selected=6),
             ui.card(
-                ui.h3('Single Battle Probability'),
-                # TODO: Adjust relative sizes using CSS
-                ui.input_selectize('die_size_single_battle', 'Number of Faces on Die', choices=[4, 6, 8, 12, 20], selected=6),
                 ui.layout_columns(
                     ui.input_slider('num_att_slider', 'Number of Attackers', min=1, max=30, value=1),
-                    ui.input_numeric('num_att_numeric', label = 'Number of Attackers', value=1, min=1, max=30, step=1),
+                    ui.input_numeric('num_att_numeric', label = ' ', value=1, min=1, max=30, step=1),
                 ),
+            ),
+            ui.card(
                 ui.layout_columns(
                     ui.input_slider('num_def_slider', 'Number of Defenders', min=1, max=30, value=1),
-                    ui.input_numeric('num_def_numeric', label = 'Number of Defenders', value=1, min=1, max=30, step=1),
+                    ui.input_numeric('num_def_numeric', label = ' ', value=1, min=1, max=30, step=1),
                 ),
-                ui.output_text('selected_probability'),
             ),
+            ui.output_text('selected_probability'),
         ),
     ),
 )
