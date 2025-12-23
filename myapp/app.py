@@ -27,8 +27,9 @@ app_ui = ui.page_fluid(
             # TODO: Adjust relative sizes using CSS
             ui.card(
                 ui.layout_columns(
-                    ui.input_slider('chart_size_slider', 'Chart Size', min=1, max=30, value=10),
+                    ui.input_slider('chart_size_slider', 'Chart Size', min=1, max=30, value=10, width='100%'),
                     ui.input_numeric('chart_size_numeric', label = ' ', value=10, min=1, max=30, step=1),
+                    col_widths=[6,2,-4],
                 ),
             ),
             ui.input_selectize('die_size', 'Number of Faces on Die', choices=[4, 6, 8, 12, 20], selected=6),
@@ -41,14 +42,16 @@ app_ui = ui.page_fluid(
             ui.input_selectize('die_size_single_battle', 'Number of Faces on Die', choices=[4, 6, 8, 12, 20], selected=6),
             ui.card(
                 ui.layout_columns(
-                    ui.input_slider('num_att_slider', 'Number of Attackers', min=1, max=30, value=1),
+                    ui.input_slider('num_att_slider', 'Number of Attackers', min=1, max=30, value=1, width='100%'),
                     ui.input_numeric('num_att_numeric', label = ' ', value=1, min=1, max=30, step=1),
+                    col_widths=[6,2,-4],
                 ),
             ),
             ui.card(
                 ui.layout_columns(
-                    ui.input_slider('num_def_slider', 'Number of Defenders', min=1, max=30, value=1),
+                    ui.input_slider('num_def_slider', 'Number of Defenders', min=1, max=30, value=1, width='100%'),
                     ui.input_numeric('num_def_numeric', label = ' ', value=1, min=1, max=30, step=1),
+                    col_widths=[6,2,-4],
                 ),
             ),
             ui.output_text('selected_probability'),
