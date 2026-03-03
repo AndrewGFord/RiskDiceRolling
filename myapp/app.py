@@ -380,8 +380,8 @@ def server(input: Inputs, output: Outputs, session: Session):
         # Create side-by-side bar charts
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
         
-        # Attacker victories (green)
-        bars1 = ax1.bar(att_remaining, att_probs, color='#2ecc71', alpha=0.7, edgecolor='black', linewidth=1.5)
+        # Attacker victories (red)
+        bars1 = ax1.bar(att_remaining, att_probs, color='#e74c3c', alpha=0.7, edgecolor='black', linewidth=1.5)
         for bar, val in zip(bars1, att_probs):
             height = bar.get_height()
             ax1.text(bar.get_x() + bar.get_width()/2., height,
@@ -394,8 +394,8 @@ def server(input: Inputs, output: Outputs, session: Session):
         ax1.grid(axis='y', alpha=0.3)
         ax1.set_ylim(0, max(att_probs) * 1.15 if len(att_probs) > 0 else 1)
         
-        # Defender victories (red)
-        bars2 = ax2.bar(def_remaining, def_probs, color='#e74c3c', alpha=0.7, edgecolor='black', linewidth=1.5)
+        # Defender victories (gray)
+        bars2 = ax2.bar(def_remaining, def_probs, color='#888888', alpha=0.7, edgecolor='black', linewidth=1.5)
         for bar, val in zip(bars2, def_probs):
             height = bar.get_height()
             ax2.text(bar.get_x() + bar.get_width()/2., height,
