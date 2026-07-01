@@ -393,10 +393,18 @@ def server(input: Inputs, output: Outputs, session: Session):
         ax1.set_title('Attacker Victories', fontsize=12, fontweight='bold')
         ax1.set_xticks(att_remaining)
         ax1.grid(axis='y', alpha=0.3)
-        ax1.set_ylim(0, max(att_probs) * 1.15 if len(att_probs) > 0 else 1)
+        
+        att_ylim = max(att_probs) * 1.15 if len(att_probs) > 0 else 1
+        def_ylim = max(def_probs) * 1.15 if len(def_probs) > 0 else 1
+        shared_ylim = max(att_ylim, def_ylim)
         
         if input.reverse_attacker_x_axis_dist():
             ax1.invert_xaxis()
+            ax1.set_ylim(0, shared_ylim)
+            ax2.set_ylim(0, shared_ylim)
+        else:
+            ax1.set_ylim(0, att_ylim)
+            ax2.set_ylim(0, def_ylim)
         
         # Defender victories (gray)
         bars2 = ax2.bar(def_remaining, def_probs, color='#888888', alpha=0.7, edgecolor='black', linewidth=1.5)
@@ -410,7 +418,6 @@ def server(input: Inputs, output: Outputs, session: Session):
         ax2.set_title('Defender Victories', fontsize=12, fontweight='bold')
         ax2.set_xticks(def_remaining)
         ax2.grid(axis='y', alpha=0.3)
-        ax2.set_ylim(0, max(def_probs) * 1.15 if len(def_probs) > 0 else 1)
         
         plt.tight_layout()
     
