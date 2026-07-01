@@ -80,6 +80,7 @@ app_ui = ui.page_fluid(
                     col_widths=[6,2,-4],
                 ),
             ),
+            ui.input_checkbox('reverse_attacker_x_axis_dist', 'Reverse x-axis for attacker results', value=False),
             ui.output_plot('plot_dist'),
             ui.output_text('dist_summary'),
         ),
@@ -393,6 +394,9 @@ def server(input: Inputs, output: Outputs, session: Session):
         ax1.set_xticks(att_remaining)
         ax1.grid(axis='y', alpha=0.3)
         ax1.set_ylim(0, max(att_probs) * 1.15 if len(att_probs) > 0 else 1)
+        
+        if input.reverse_attacker_x_axis_dist():
+            ax1.invert_xaxis()
         
         # Defender victories (gray)
         bars2 = ax2.bar(def_remaining, def_probs, color='#888888', alpha=0.7, edgecolor='black', linewidth=1.5)
